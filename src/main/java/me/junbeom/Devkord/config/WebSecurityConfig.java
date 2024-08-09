@@ -39,16 +39,16 @@ public class WebSecurityConfig {
         return http
                 .authorizeRequests(auth -> auth
                         .requestMatchers(
-                                new AntPathRequestMatcher("/login"),
-                                new AntPathRequestMatcher("/signup")
+                                new AntPathRequestMatcher("/users/login"),
+                                new AntPathRequestMatcher("/users/signup")
                         ).permitAll()
                         .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
-                        .loginPage("/login")
+                        .loginPage("/users/login")
                         .defaultSuccessUrl("/chat/list")
                 )
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/login")
+                        .logoutSuccessUrl("/users/login")
                         .invalidateHttpSession(true)
                 )
                 .csrf(AbstractHttpConfigurer::disable)

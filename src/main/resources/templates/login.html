@@ -7,7 +7,7 @@
 <body>
 login 페이지로 연결되는지 테스트
 
-<form action="/login" method="POST">
+<form action="/users/login" method="POST">
     <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}" />
     <label>Email address</label>
     <input type="email" name="username">
@@ -15,7 +15,7 @@ login 페이지로 연결되는지 테스트
     <input type="password" name="password">
     <button type="submit">Submit</button>
 </form>
-<button type="button" onclick="location.href='/signup'">회원가입</button>
+<button type="button" onclick="location.href='/users/signup'">회원가입</button>
 
 </body>
 </html>
