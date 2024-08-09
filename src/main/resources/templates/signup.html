@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>signup</title>
+</head>
+<body>
+signup 페이지로 연결되는지 테스트
+
+<form th:action="@{/signup}" method="POST">
+    <label>Email address</label>
+    <input type="email" name="email">
+    <label>Password</label>
+    <input type="password" name="password">
+    <button type="submit">Submit</button>
+</form>
+
+</body>
+</html>
