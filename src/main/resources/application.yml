@@ -14,6 +14,7 @@ spring:
     console:
       enabled: true
 
-jwt:
-  issuer: ajufresh@gmail.com
-  secret_key: devkord-springboot
+  security:
+    oauth2:
+      client:
+        registration:
