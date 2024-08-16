@@ -18,3 +18,13 @@ spring:
     oauth2:
       client:
         registration:
+          google:
+            client-id: 965822960594-ujh71ug4t5hrd2sdbceimp7n6m9134ql.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - email
+              - profile
+
+jwt:
+  issuer: ajufresh@gmail.com
+  secret_key: devkord-springboot
