@@ -2,9 +2,51 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>채팅방</title>
+    <title>Chat Room</title>
 </head>
 <body>
 <p>채팅룸 아이디: <td th:text="${chatRoomId}">default</td> </p>
+<h2>Chat Room</h2>
+<textarea id="messages" rows="10" cols="50" readonly></textarea><br>
+<input id="messageInput" type="text">
+<button onclick="sendMessage()">Send Message</button>
+
+<script>
+    const ws = new WebSocket(`ws://localhost:8080/ws/chat`);
+
+    ws.onopen = () => {
+        console.log('WebSocket connection established');
+        document.getElementById('messages').value += 'WebSocket connection established\n';
+
+        // 입장 메시지 전송
+        ws.send(JSON.stringify({
+            chatRoomId: '[[${chatRoomId}]]',
+            messageType: 'ENTER',
+            message: `someone joined the chat`,
+            senderId: 1
+        }));
+    };
+
+    ws.onmessage = (event) => {
+        console.log('Message from server:', event.data);
+        document.getElementById('messages').value += 'Message from server: ' + event.data + '\n';
+    };
+
+    ws.onclose = () => {
+        console.log('WebSocket connection closed');
+        document.getElementById('messages').value += 'WebSocket connection closed\n';
+    };
+
+    function sendMessage() {
+        const message = document.getElementById('messageInput').value;
+        ws.send(JSON.stringify({
+            chatRoomId: '[[${chatRoomId}]]',
+            messageType: 'TALK',
+            message: message,
+            senderId: 1
+        }));
+        document.getElementById('messageInput').value = '';
+    }
+</script>
 </body>
 </html>
