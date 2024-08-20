@@ -28,6 +28,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             Authentication authentication = tokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+
+        //엑세스토큰 만료시 처리 로직 추가해야함
+
         filterChain.doFilter(request, response);
     }
     private String getAccessToken(String authorizationHeader) {
