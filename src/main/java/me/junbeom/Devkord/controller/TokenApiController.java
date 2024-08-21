@@ -27,13 +27,14 @@ public class TokenApiController {
             (@RequestBody CreateAccessTokenRequest request) {
         String newAccessToken = tokenService.createNewAccessToken(request.getRefreshToken());
 
-//        return ResponseEntity.status(HttpStatus.CREATED)
-//                .body(new CreateAccessTokenResponse(newAccessToken));
-
-        //아래 코드로 변경해야할 듯(BODY->HEADER)
+        //헤더로 토큰 전달
         return ResponseEntity.status(HttpStatus.CREATED)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + newAccessToken)
                 .build();
+
+        //바디로 토큰 전달하는 코드(주석처리)
+        //      return ResponseEntity.status(HttpStatus.CREATED)
+        //         .body(new CreateAccessTokenResponse(newAccessToken));
     }
 
     @DeleteMapping("/api/refresh-token")

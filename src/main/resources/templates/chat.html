@@ -13,7 +13,9 @@
 
 <script src="/js/chat.js"></script>
 <script>
-    const ws = new WebSocket(`ws://localhost:8080/ws/chat`);
+    const token = localStorage.getItem('access_token');
+    const chatRoomId = '[[${chatRoomId}]]';
+    const ws = new WebSocket(`ws://localhost:8080/ws/chat?chatRoomId=${chatRoomId}`);
 
     ws.onopen = () => {
         console.log('WebSocket connection established');
@@ -21,7 +23,7 @@
 
         // 입장 메시지 전송
         ws.send(JSON.stringify({
-            chatRoomId: '[[${chatRoomId}]]',
+            chatRoomId: chatRoomId,
             messageType: 'ENTER',
             message: `someone joined the chat`,
             senderId: 1
@@ -31,6 +33,16 @@
     ws.onmessage = (event) => {
         console.log('Message from server:', event.data);
         document.getElementById('messages').value += 'Message from server: ' + event.data + '\n';
+
+         // 수신한 메시지를 파싱
+        const messageData = JSON.parse(event.data);
+
+        // 지난 채팅 내역 또는 새로운 메시지 출력
+        if (messageData.sender) {  // sender가 있다면 이 메시지는 지난 채팅 내역이거나 새로운 메시지
+            document.getElementById('messages').value += `${messageData.sender}: ${messageData.message}\n`;
+        } else {
+            document.getElementById('messages').value += 'Message from server: ' + messageData + '\n';
+        }
     };
 
     ws.onclose = () => {
@@ -41,7 +53,7 @@
     function sendMessage() {
         const message = document.getElementById('messageInput').value;
         ws.send(JSON.stringify({
-            chatRoomId: '[[${chatRoomId}]]',
+            chatRoomId: chatRoomId,
             messageType: 'TALK',
             message: message,
             senderId: 1
