@@ -1,3 +1,24 @@
+//채팅방 입장 기능
+document.querySelectorAll('.enter-chat-btn').forEach(button => {
+    button.addEventListener('click', event => {
+        const opponentId = event.target.getAttribute('data-opponent-id');
+        const currentUserId = document.getElementById('currentUserId').value;
+
+        console.log('Current User ID:', currentUserId);
+        console.log('Opponent ID:', opponentId);
+
+        function success() {
+            location.href = `/chat/${currentUserId}/${opponentId}`
+        }
+        function fail() {
+            alert('실패: 모든 토큰이 만료되었습니다. 다시 로그인해주세요.');
+        }
+
+        // 토큰 유효성을 확인하는 요청을 보냄
+        httpRequest('GET', '/api/check-token', null, success, fail);
+    });
+});
+
 // 로그아웃 기능
 const logoutButton = document.getElementById('logout-btn');
 

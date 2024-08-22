@@ -8,6 +8,7 @@
 <h1>채팅방 목록</h1>
 <p>현재 유저명: <td th:text="${currentUser.nickname}">default</td> </p>
 <p>현재 유저 이메일: <td th:text="${currentUser.email}">default</td> </p>
+<input type="hidden" id="currentUserId" th:value="${currentUser.id}">
 <table border="1">
     <tr>
         <th>ID</th>
@@ -19,7 +20,9 @@
         <td th:text="${user.id}">-</td>
         <td th:text="${user.nickname}">-</td>
         <td th:text="${user.email}">-</td>
-        <td><a th:href="@{/chat/{myId}/{opponentId}(myId=${currentUser.id}, opponentId=${user.id})}">입장</a></td>
+        <td>
+            <button type="button" class="enter-chat-btn" th:data-opponent-id="${user.id}">입장</button>
+        </td>
     </tr>
 </table>
 <button type="button" class="btn btn-secondary" id="logout-btn">로그아웃</button>

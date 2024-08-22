@@ -24,8 +24,11 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         String authorizationHeader = request.getHeader(HEADER_AUTHORIZATION);
         String token = getAccessToken(authorizationHeader);
 
+        System.out.println("Token Filter Enter!!!");
+
         if (tokenProvider.validToken(token)) {
             Authentication authentication = tokenProvider.getAuthentication(token);
+            System.out.println("Token is valid!!!"+ authentication);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 

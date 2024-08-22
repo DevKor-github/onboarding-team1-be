@@ -44,4 +44,10 @@ public class TokenApiController {
         return ResponseEntity.ok()
                 .build();
     }
+
+    @GetMapping("/api/check-token")
+    public ResponseEntity checkAceessToken() {
+        return ResponseEntity.ok()
+                .build();
+    }
 }
