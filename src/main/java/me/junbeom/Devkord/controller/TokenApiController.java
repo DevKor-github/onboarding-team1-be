@@ -47,6 +47,9 @@ public class TokenApiController {
 
     @GetMapping("/api/check-token")
     public ResponseEntity checkAceessToken() {
+
+        //여기에 헤더에 있는 토큰의 유저정보 조회해서 현재사용자와 같은지 확인하는 로직 추가해야함//
+
         return ResponseEntity.ok()
                 .build();
     }
