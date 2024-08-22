@@ -7,6 +7,8 @@ import me.junbeom.Devkord.repository.ChatRoomRepository;
 import me.junbeom.Devkord.service.ChatService;
 import me.junbeom.Devkord.service.UserDetailService;
 import me.junbeom.Devkord.service.UserService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
@@ -48,13 +50,17 @@ public class ChatViewController {
         chatService.saveChatRoom(chatRoomId, user1Id, user2Id);
 
         redirectAttributes.addAttribute("chatRoomId", chatRoomId);
+        redirectAttributes.addAttribute("currentUserId", id1);
 
         return "redirect:/chat/{chatRoomId}";
     }
 
     @GetMapping("/chat/{chatRoomId}")
-    public String getChatRoom(@PathVariable String chatRoomId, Model model) {
+    public String getChatRoom(@PathVariable String chatRoomId, @RequestParam Long currentUserId, Model model) {
         model.addAttribute("chatRoomId", chatRoomId);
+
+        User currentUser = userService.findById(currentUserId);
+        model.addAttribute("currentUser", currentUser);
 
         return "chat";
     }

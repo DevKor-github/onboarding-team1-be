@@ -15,6 +15,7 @@
 <script>
     const token = localStorage.getItem('access_token');
     const chatRoomId = '[[${chatRoomId}]]';
+    const currentUserId = '[[${currentUser.id}]]';
     const ws = new WebSocket(`ws://localhost:8080/ws/chat?chatRoomId=${chatRoomId}`);
 
     ws.onopen = () => {
@@ -26,23 +27,33 @@
             chatRoomId: chatRoomId,
             messageType: 'ENTER',
             message: `someone joined the chat`,
-            senderId: 1
+            senderId: currentUserId
         }));
     };
 
     ws.onmessage = (event) => {
         console.log('Message from server:', event.data);
-        document.getElementById('messages').value += 'Message from server: ' + event.data + '\n';
 
-         // 수신한 메시지를 파싱
+        // 수신한 메시지를 파싱
         const messageData = JSON.parse(event.data);
 
-        // 지난 채팅 내역 또는 새로운 메시지 출력
-        if (messageData.sender) {  // sender가 있다면 이 메시지는 지난 채팅 내역이거나 새로운 메시지
-            document.getElementById('messages').value += `${messageData.sender}: ${messageData.message}\n`;
-        } else {
-            document.getElementById('messages').value += 'Message from server: ' + messageData + '\n';
+        // messageType이 ENTER인 경우 출력하지 않음
+        if (messageData.messageType === 'ENTER') {
+            return;
         }
+
+        // 메시지를 {senderId}: {message} 형식으로 출력
+        document.getElementById('messages').value += `${messageData.senderId}: ${messageData.message}\n`;
+
+<!--         // 수신한 메시지를 파싱-->
+<!--        const messageData = JSON.parse(event.data);-->
+
+<!--        // 지난 채팅 내역 또는 새로운 메시지 출력-->
+<!--        if (messageData.sender) {  // sender가 있다면 이 메시지는 지난 채팅 내역이거나 새로운 메시지-->
+<!--            document.getElementById('messages').value += `${messageData.sender}: ${messageData.message}\n`;-->
+<!--        } else {-->
+<!--            document.getElementById('messages').value += 'Message from server: ' + messageData + '\n';-->
+<!--        }-->
     };
 
     ws.onclose = () => {
@@ -56,7 +67,7 @@
             chatRoomId: chatRoomId,
             messageType: 'TALK',
             message: message,
-            senderId: 1
+            senderId: currentUserId
         }));
         document.getElementById('messageInput').value = '';
     }

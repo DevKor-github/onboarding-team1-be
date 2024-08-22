@@ -65,15 +65,11 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
         //chatSendRequest에서 ChatRoomId를 가져와서 채팅룸(chatRoomSession)을 생성.(이미 존재하면 조회해서 chatRoomSession에 저장)
         String chatRoomId = chatSendRequest.getChatRoomId();
-        // 메모리 상에 채팅방에 대한 세션 없으면 만들어줌
         chatRoomSessionMap.putIfAbsent(chatRoomId, ConcurrentHashMap.newKeySet());
         Set<WebSocketSession> chatRoomSession = chatRoomSessionMap.get(chatRoomId);
 
-        // message 에 담긴 타입을 확인한다.
-        // 이때 message 에서 getType 으로 가져온 내용이
-        // ChatDTO 의 열거형인 MessageType 안에 있는 ENTER 과 동일한 값이라면
+
         if (chatSendRequest.getMessageType().equals(ChatSendRequest.MessageType.ENTER)) {
-            // sessions 에 넘어온 session 을 담고,
             chatRoomSession.add(session);
             System.out.println("CHATROOMSESSION:" + chatRoomSession);
         }
@@ -98,6 +94,11 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
 //-----------------------------기타 메서드들-------------------------
     private void saveChatToChatRoom(ChatSendRequest chatSendRequest) {
+        // 0. ENTER 메세지는 저장하지 않음.
+        if (chatSendRequest.getMessageType().equals(ChatSendRequest.MessageType.ENTER)) {
+            return;
+        }
+
         // 1. ChatSendRequest에서 Chat 엔티티 생성
         Chat chat = new Chat(
                 chatSendRequest.getSenderId(),
