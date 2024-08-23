@@ -27,4 +27,4 @@ spring:
 
 jwt:
   issuer: ajufresh@gmail.com
-  secret_key: devkord-springboot
+  secret_key: b355070214864b7f5ae2101a46b3bee434ef8ce446c9e83980ae4e2bee85bdc9

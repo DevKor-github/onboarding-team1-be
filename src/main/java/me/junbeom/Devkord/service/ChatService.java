@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import me.junbeom.Devkord.domain.Chat;
 import me.junbeom.Devkord.domain.ChatRoom;
 import me.junbeom.Devkord.domain.User;
-import me.junbeom.Devkord.dto.AddUserRequest;
 import me.junbeom.Devkord.repository.ChatRoomRepository;
 import me.junbeom.Devkord.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

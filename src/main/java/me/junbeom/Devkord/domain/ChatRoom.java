@@ -22,10 +22,10 @@ public class ChatRoom {
     @Column(name = "chatRoomId", nullable = false, unique = true)
     private String chatRoomId;
 
-    @Column(name = "userId1", nullable = false, unique = true)
+    @Column(name = "userId1", nullable = false)
     private Long userId1;
 
-    @Column(name = "userId2", nullable = false, unique = true)
+    @Column(name = "userId2", nullable = false)
     private Long userId2;
 
     @ElementCollection(fetch = FetchType.EAGER)
