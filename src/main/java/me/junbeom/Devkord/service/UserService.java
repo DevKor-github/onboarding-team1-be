@@ -36,9 +36,9 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Unexpected user"));
 
-//        if (!passwordEncoder.matches(password, user.getPassword())) {
-//            throw new IllegalArgumentException("Invalid password");
-//        }
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalArgumentException("Invalid password");
+        }
 
         String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
         saveRefreshToken(user.getId(), refreshToken);
