@@ -30,17 +30,16 @@ public class UserApiController {
     private final UserService userService;
 
     @PostMapping("users/login")
-    public ModelAndView signIn(@RequestParam String email, @RequestParam String password, HttpServletRequest request, HttpServletResponse response) {
-        try {
-            String accessToken = userService.signIn(email, password, request, response);
-            log.info("request email = {}, password = {}", email, password);
-            log.info("jwtToken accessToken = {}", accessToken);
+    public ResponseEntity<String> signIn(@RequestParam String email, @RequestParam String password, HttpServletRequest request, HttpServletResponse response) {
+        String accessToken = userService.signIn(email, password, request, response);
+        log.info("request email = {}, password = {}", email, password);
+        log.info("jwtToken accessToken = {}", accessToken);
 
-            return new ModelAndView("redirect:/chat/list?token=" + accessToken);
-        } catch (Exception e) {
-            log.error("Error during sign-in", e);
-            return new ModelAndView("error"); // 적절한 오류 페이지로 리디렉션하거나 오류 메시지를 반환
-        }
+        // Response 헤더에 accessToken 추가
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + accessToken);
+
+        return new ResponseEntity<>("Login successful", headers, HttpStatus.OK);
     }
 
     @PostMapping("/users/signup")
