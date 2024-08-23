@@ -8,10 +8,10 @@ spring:
         format_sql: true
     defer-datasource-initialization: true
 
-  datasource:
-    initialize: true
-    url: jdbc:h2:mem:testdb
-    username: sa
+#  datasource:
+#    initialize: true
+#    url: jdbc:h2:mem:testdb
+#    username: sa
 
   h2:
     console:

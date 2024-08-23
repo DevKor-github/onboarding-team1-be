@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.junbeom.Devkord.domain.User;
 import me.junbeom.Devkord.dto.CurrentUserResponse;
+import me.junbeom.Devkord.dto.UserLoginRequest;
 import me.junbeom.Devkord.dto.UserSignupRequest;
 import me.junbeom.Devkord.service.UserService;
 import org.springframework.http.HttpHeaders;
@@ -30,9 +31,9 @@ public class UserApiController {
     private final UserService userService;
 
     @PostMapping("users/login")
-    public ResponseEntity<String> signIn(@RequestParam String email, @RequestParam String password, HttpServletRequest request, HttpServletResponse response) {
-        String accessToken = userService.signIn(email, password, request, response);
-        log.info("request email = {}, password = {}", email, password);
+    public ResponseEntity<String> signIn(@RequestBody UserLoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
+        String accessToken = userService.signIn(loginRequest.getEmail(), loginRequest.getPassword(), request, response);
+        log.info("request email = {}, password = {}", loginRequest.getEmail(), loginRequest.getPassword());
         log.info("jwtToken accessToken = {}", accessToken);
 
         // Response 헤더에 accessToken 추가
