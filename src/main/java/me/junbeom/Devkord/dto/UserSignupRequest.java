@@ -9,5 +9,5 @@ public class UserSignupRequest {
     private String email;
     private String password;
     private String nickname;
-    private String profileImg;
+    private byte[] profileImg;
 }

@@ -12,12 +12,16 @@
 <table border="1">
     <tr>
         <th>ID</th>
+        <th>프로필사진</th>
         <th>유저명</th>
         <th>유저 이메일</th>
         <th>채팅방 입장</th>
     </tr>
     <tr th:each="user : ${users}">
         <td th:text="${user.id}">-</td>
+        <td>
+            <img th:src="@{/users/profileImage/{userId}(userId=${user.id})}" alt="기본 이미지" style="width: 80px; height: 80px;">
+        </td>
         <td th:text="${user.nickname}">-</td>
         <td th:text="${user.email}">-</td>
         <td>

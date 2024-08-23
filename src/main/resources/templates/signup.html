@@ -7,15 +7,15 @@
 <body>
 signup 페이지로 연결되는지 테스트
 
-<form th:action="@{/users/signup}" method="POST">
+<form th:action="@{/users/signup}" method="POST" enctype="multipart/form-data">
     <label>Email address</label>
-    <input type="email" name="email">
+    <input type="email" name="email"><br>
     <label>Password</label>
-    <input type="password" name="password">
+    <input type="password" name="password"><br>
     <label>Nickname</label>
-    <input type="nickname" name="nickname">
-    <label>프로필 이미지(준비중)</label>
-    <input type="profileImg" name="profileImg">
+    <input type="text" name="nickname"><br>
+    <label>Profile Image</label>
+    <input type="file" name="profileImg"><br>
     <button type="submit">Submit</button>
 </form>
 

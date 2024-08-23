@@ -8,13 +8,19 @@ import me.junbeom.Devkord.domain.User;
 import me.junbeom.Devkord.dto.CurrentUserResponse;
 import me.junbeom.Devkord.dto.UserSignupRequest;
 import me.junbeom.Devkord.service.UserService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.io.IOException;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,15 +43,50 @@ public class UserApiController {
         }
     }
 
-    @PostMapping("/api/test")
-    public String test() {
-        return "success";
+    @PostMapping("/users/signup")
+    public ModelAndView signup(@RequestParam("email") String email,
+                               @RequestParam("password") String password,
+                               @RequestParam("nickname") String nickname,
+                               @RequestParam(value = "profileImg", required = false) MultipartFile profileImg) {
+
+        byte[] profileImgBytes = null;
+        if (profileImg != null && !profileImg.isEmpty()) {
+            try {
+                profileImgBytes = profileImg.getBytes();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return new ModelAndView("Failed to process profile image.");
+            }
+        }
+
+        UserSignupRequest userSignupRequest = new UserSignupRequest();
+        userSignupRequest.setEmail(email);
+        userSignupRequest.setPassword(password);
+        userSignupRequest.setNickname(nickname);
+        userSignupRequest.setProfileImg(profileImgBytes);
+
+        userService.save(userSignupRequest);
+
+        return new ModelAndView("redirect:/users/login");
     }
 
-    @PostMapping("/users/signup")
-    public ModelAndView signup(UserSignupRequest request) {
-        userService.save(request);
-        return new ModelAndView("redirect:/users/login");
+    @GetMapping("/users/profileImage/{userId}")
+    public ResponseEntity<byte[]> getProfileImage(@PathVariable Long userId) {
+        User user = userService.findById(userId);
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        byte[] profileImg = user.getProfileImg();
+
+        if (profileImg == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(org.springframework.http.MediaType.IMAGE_JPEG);
+        return new ResponseEntity<>(profileImg, headers, HttpStatus.OK);
     }
 
     @GetMapping("/users/logout")

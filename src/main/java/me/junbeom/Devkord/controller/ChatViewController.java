@@ -31,7 +31,6 @@ public class ChatViewController {
         model.addAttribute("users", users);
 
         User currentUser = userDetailService.getCurrentUser(token); // 현재 로그인된 유저의 ID 가져오기
-        System.out.println(currentUser);
         model.addAttribute("currentUser", currentUser);
 
 
