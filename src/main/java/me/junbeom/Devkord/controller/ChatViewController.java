@@ -37,12 +37,14 @@ public class ChatViewController {
     }
 
     @GetMapping("/chat/{id1}/{id2}")
-    public String getChatRoomId(@PathVariable Long id1, @PathVariable Long id2, RedirectAttributes redirectAttributes) {
+    public String getChatRoomId(@PathVariable Long id1, @PathVariable Long id2, RedirectAttributes redirectAttributes, Authentication authentication) {
         Long user1Id = Math.min(id1, id2);
         Long user2Id = Math.max(id1, id2);
 
         // 위에서 정렬된 user1Id와 user2Id를 사용하여 채팅방을 찾거나 생성
         String chatRoomId = user1Id + "-" + user2Id;
+
+        System.out.println("현재사용자currentuserINCHAT:"+authentication);
 
         //채팅룸 db에 저장(db에 이미 있으면 do nothing)
         chatService.saveChatRoom(chatRoomId, user1Id, user2Id);
@@ -59,6 +61,8 @@ public class ChatViewController {
 
         User currentUser = userService.findById(currentUserId);
         model.addAttribute("currentUser", currentUser);
+
+        System.out.println("printed here");
 
         return "chat";
     }

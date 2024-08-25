@@ -16,6 +16,7 @@
     const token = localStorage.getItem('access_token');
     const chatRoomId = '[[${chatRoomId}]]';
     const currentUserId = '[[${currentUser.id}]]';
+    const timestamp = new Date().toISOString();
 
 <!--  위:배포 / 아래:로컬  -->
 <!--    const ws = new WebSocket(`ws://springboot-developer-env.eba-tb7bgpjh.ap-northeast-2.elasticbeanstalk.com/ws/chat?chatRoomId=${chatRoomId}`);-->
@@ -30,7 +31,8 @@
             chatRoomId: chatRoomId,
             messageType: 'ENTER',
             message: `someone joined the chat`,
-            senderId: currentUserId
+            senderId: currentUserId,
+            timestamp: timestamp
         }));
     };
 
@@ -46,7 +48,7 @@
         }
 
         // 메시지를 {senderId}: {message} 형식으로 출력
-        document.getElementById('messages').value += `${messageData.senderId}: ${messageData.message}\n`;
+        document.getElementById('messages').value += `${messageData.senderId}( ${messageData.timestamp} ): ${messageData.message}\n`;
 
 <!--         // 수신한 메시지를 파싱-->
 <!--        const messageData = JSON.parse(event.data);-->
@@ -70,7 +72,8 @@
             chatRoomId: chatRoomId,
             messageType: 'TALK',
             message: message,
-            senderId: currentUserId
+            senderId: currentUserId,
+            timestamp: timestamp
         }));
         document.getElementById('messageInput').value = '';
     }

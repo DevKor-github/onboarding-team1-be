@@ -2,6 +2,8 @@ package me.junbeom.Devkord.dto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Builder
 @Getter
 @Setter
@@ -17,4 +19,5 @@ public class ChatSendRequest {
     private String chatRoomId; // 방 번호
     private Long senderId; // 채팅을 보낸 사람
     private String message; // 메시지
+    private LocalDateTime timestamp;
 }

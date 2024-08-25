@@ -55,7 +55,9 @@ public class WebSecurityConfig {
                 .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/api/token")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/chat/list")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated()
+                        //.requestMatchers(new AntPathRequestMatcher("/chat/**")).authenticated()
                         .anyRequest().permitAll())
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .defaultAuthenticationEntryPointFor(
