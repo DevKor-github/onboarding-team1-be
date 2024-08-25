@@ -20,7 +20,7 @@
     <tr th:each="user : ${users}">
         <td th:text="${user.id}">-</td>
         <td>
-            <img th:src="@{/users/profileImage/{userId}(userId=${user.id})}" alt="기본 이미지" style="width: 80px; height: 80px;">
+            <img th:src="@{${user.profileImg}}" alt="프사 등록 안함" style="width: 80px; height: 80px;" />
         </td>
         <td th:text="${user.nickname}">-</td>
         <td th:text="${user.email}">-</td>

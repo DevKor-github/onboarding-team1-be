@@ -14,7 +14,9 @@ import me.junbeom.Devkord.util.CookieUtil;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.List;
@@ -30,6 +32,7 @@ public class UserService {
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
+    private final S3Uploader s3Uploader;
 
     @Transactional
     public String signIn(String email, String password, HttpServletRequest request, HttpServletResponse response) {
@@ -64,12 +67,21 @@ public class UserService {
         CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken, cookieMaxAge);
     }
 
-    public Long save(UserSignupRequest dto) {
+    public Long save(UserSignupRequest dto){
+
+        MultipartFile profileImg = dto.getProfileImg();
+        String imageUrl = null;
+        try {
+            imageUrl = s3Uploader.upload(profileImg);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         return userRepository.save(User.builder()
                 .email(dto.getEmail())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .nickname(dto.getNickname())
-                .profileImg(dto.getProfileImg())
+                .profileImg(imageUrl)
                 .build()).getId();
     }
 

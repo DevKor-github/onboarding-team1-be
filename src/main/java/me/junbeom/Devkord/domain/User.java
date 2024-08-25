@@ -32,12 +32,11 @@ public class User implements UserDetails {
     @Column(name = "nickname", unique = true)
     private String nickname;
 
-    @Lob
     @Column(name = "profileImg")
-    private byte[] profileImg;
+    private String profileImg;
 
     @Builder
-    public User(String email, String password, String nickname, byte[] profileImg) {
+    public User(String email, String password, String nickname, String profileImg) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;

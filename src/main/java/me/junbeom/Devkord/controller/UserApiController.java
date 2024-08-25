@@ -30,6 +30,12 @@ public class UserApiController {
 
     private final UserService userService;
 
+
+    //유찬에게 배포할때 입력인자
+    // @RequestBody UserLoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response
+    // 로 바꾸고 반환값은
+    // return new ResponseEntity<>("Login successful", headers, HttpStatus.OK);
+    // 이렇게 바꿔야함
     @PostMapping("users/login")
     public ModelAndView signIn(@RequestParam String email, @RequestParam String password, HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -49,44 +55,15 @@ public class UserApiController {
                                @RequestParam("nickname") String nickname,
                                @RequestParam(value = "profileImg", required = false) MultipartFile profileImg) {
 
-        byte[] profileImgBytes = null;
-        if (profileImg != null && !profileImg.isEmpty()) {
-            try {
-                profileImgBytes = profileImg.getBytes();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return new ModelAndView("Failed to process profile image.");
-            }
-        }
-
         UserSignupRequest userSignupRequest = new UserSignupRequest();
         userSignupRequest.setEmail(email);
         userSignupRequest.setPassword(password);
         userSignupRequest.setNickname(nickname);
-        userSignupRequest.setProfileImg(profileImgBytes);
+        userSignupRequest.setProfileImg(profileImg);
 
         userService.save(userSignupRequest);
 
         return new ModelAndView("redirect:/users/login");
-    }
-
-    @GetMapping("/users/profileImage/{userId}")
-    public ResponseEntity<byte[]> getProfileImage(@PathVariable Long userId) {
-        User user = userService.findById(userId);
-
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        byte[] profileImg = user.getProfileImg();
-
-        if (profileImg == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(org.springframework.http.MediaType.IMAGE_JPEG);
-        return new ResponseEntity<>(profileImg, headers, HttpStatus.OK);
     }
 
     @GetMapping("/users/logout")

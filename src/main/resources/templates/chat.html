@@ -16,6 +16,9 @@
     const token = localStorage.getItem('access_token');
     const chatRoomId = '[[${chatRoomId}]]';
     const currentUserId = '[[${currentUser.id}]]';
+
+<!--  위:배포 / 아래:로컬  -->
+<!--    const ws = new WebSocket(`ws://springboot-developer-env.eba-tb7bgpjh.ap-northeast-2.elasticbeanstalk.com/ws/chat?chatRoomId=${chatRoomId}`);-->
     const ws = new WebSocket(`ws://localhost:8080/ws/chat?chatRoomId=${chatRoomId}`);
 
     ws.onopen = () => {
