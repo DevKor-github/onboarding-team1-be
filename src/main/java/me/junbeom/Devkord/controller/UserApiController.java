@@ -21,11 +21,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin(origins = "http://localhost:5173/")
 public class UserApiController {
 
     private final UserService userService;
@@ -37,24 +40,30 @@ public class UserApiController {
     // return new ResponseEntity<>("Login successful", headers, HttpStatus.OK);
     // 이렇게 바꿔야함
     @PostMapping("users/login")
-    public ModelAndView signIn(@RequestParam String email, @RequestParam String password, HttpServletRequest request, HttpServletResponse response) {
-        try {
-            String accessToken = userService.signIn(email, password, request, response);
-            log.info("request email = {}, password = {}", email, password);
-            log.info("jwtToken accessToken = {}", accessToken);
-            return new ModelAndView("redirect:/chat/list?token=" + accessToken);
-        } catch (Exception e) {
-            log.error("Error during sign-in", e);
-            return new ModelAndView("error"); // 적절한 오류 페이지로 리디렉션하거나 오류 메시지를 반환
-        }
+    public ResponseEntity<Map<String, String>> signIn(@RequestBody UserLoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
+        String accessToken = userService.signIn(loginRequest.getEmail(), loginRequest.getPassword(), request, response);
+        log.info("request email = {}, password = {}", loginRequest.getEmail(), loginRequest.getPassword());
+        log.info("jwtToken accessToken = {}", accessToken);
+
+//        // Response 헤더에 accessToken 추가
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Authorization", "Bearer " + accessToken);
+//        return new ResponseEntity<>("Login successful", headers, HttpStatus.OK);
+
+        // 응답 바디에 accessToken 추가
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("accessToken", accessToken);
+        responseBody.put("message", "Login successful");
+
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
-    @PostMapping("/users/signup")
-    public ModelAndView signup(@RequestParam("email") String email,
-                               @RequestParam("password") String password,
-                               @RequestParam("nickname") String nickname,
-                               @RequestParam(value = "profileImg", required = false) MultipartFile profileImg) {
 
+    @PostMapping("/users/signup")
+    public ResponseEntity<String> signup(@RequestParam("email") String email,
+                                         @RequestParam("password") String password,
+                                         @RequestParam("nickname") String nickname,
+                                         @RequestParam(value = "profileImg", required = false) MultipartFile profileImg) {
         UserSignupRequest userSignupRequest = new UserSignupRequest();
         userSignupRequest.setEmail(email);
         userSignupRequest.setPassword(password);
@@ -63,8 +72,26 @@ public class UserApiController {
 
         userService.save(userSignupRequest);
 
-        return new ModelAndView("redirect:/users/login");
+        return ResponseEntity.ok("Signup successful. Please log in.");
     }
+
+
+//    @PostMapping("/users/signup")
+//    public ModelAndView signup(@RequestParam("email") String email,
+//                               @RequestParam("password") String password,
+//                               @RequestParam("nickname") String nickname,
+//                               @RequestParam(value = "profileImg", required = false) MultipartFile profileImg) {
+//
+//        UserSignupRequest userSignupRequest = new UserSignupRequest();
+//        userSignupRequest.setEmail(email);
+//        userSignupRequest.setPassword(password);
+//        userSignupRequest.setNickname(nickname);
+//        userSignupRequest.setProfileImg(profileImg);
+//
+//        userService.save(userSignupRequest);
+//
+//        return new ModelAndView("redirect:/users/login");
+//    }
 
     @GetMapping("/users/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {

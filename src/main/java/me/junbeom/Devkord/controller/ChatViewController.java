@@ -7,33 +7,44 @@ import me.junbeom.Devkord.repository.ChatRoomRepository;
 import me.junbeom.Devkord.service.ChatService;
 import me.junbeom.Devkord.service.UserDetailService;
 import me.junbeom.Devkord.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Controller
+@CrossOrigin(origins = "http://localhost:5173/")
 public class ChatViewController {
     private final UserService userService;
     private final UserDetailService userDetailService;
     private final ChatService chatService;
 
     @GetMapping("/chat/list")
-    public String getChatlist(Model model, @RequestParam("token") String token) {
-        List<User> users = userService.getAllUsers(); // 전체 유저 목록(리스트) 가져오기
-        model.addAttribute("users", users);
+    public ResponseEntity<Map<String, Object>> getChatlist(@RequestParam("token") String token) {
+        // 전체 유저 목록(리스트) 가져오기
+        List<User> users = userService.getAllUsers();
 
-        User currentUser = userDetailService.getCurrentUser(token); // 현재 로그인된 유저의 ID 가져오기
-        model.addAttribute("currentUser", currentUser);
+        // 현재 로그인된 유저 정보 가져오기
+        User currentUser = userDetailService.getCurrentUser(token);
 
-        return "chatlist";
+        // 데이터를 Map으로 묶기
+        Map<String, Object> response = new HashMap<>();
+        response.put("users", users);
+        response.put("currentUser", currentUser);
+
+        // ResponseEntity로 반환
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/chat/{id1}/{id2}")

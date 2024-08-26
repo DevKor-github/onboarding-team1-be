@@ -19,8 +19,8 @@
     const timestamp = new Date().toISOString();
 
 <!--  위:배포 / 아래:로컬  -->
-<!--    const ws = new WebSocket(`ws://springboot-developer-env.eba-tb7bgpjh.ap-northeast-2.elasticbeanstalk.com/ws/chat?chatRoomId=${chatRoomId}`);-->
-    const ws = new WebSocket(`ws://localhost:8080/ws/chat?chatRoomId=${chatRoomId}`);
+    const ws = new WebSocket(`ws://springboot-developer-env.eba-tb7bgpjh.ap-northeast-2.elasticbeanstalk.com/ws/chat?chatRoomId=${chatRoomId}`);
+<!--    const ws = new WebSocket(`ws://localhost:8080/ws/chat?chatRoomId=${chatRoomId}`);-->
 
     ws.onopen = () => {
         console.log('WebSocket connection established');

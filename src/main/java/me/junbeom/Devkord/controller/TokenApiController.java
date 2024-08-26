@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin(origins = "http://localhost:5173/")
 public class TokenApiController {
     private final TokenService tokenService;
     private final RefreshTokenService refreshTokenService;
